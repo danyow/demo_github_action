@@ -18,7 +18,9 @@
 
    > 其中 `.nojekyll` 作用是告诉 `Github Pages` 不是 `jekyll` 项目
 
-2. 在 `Unity Editor` 中构建并运行, 目录选择 `docs` 得到下列目录结构
+2. 构建之前确保自己项目中的发布压缩格式选择为 `已禁用`
+
+3. 在 `Unity Editor` 中构建并运行, 目录选择 `docs` 得到下列目录结构
 
     ```tree
     docs
@@ -40,10 +42,10 @@
        ├── unity-logo-light.png
        └── webgl-logo.png
     ```
-3. 推送项目, 并且启用, `Github Pages`
+4. 推送项目, 并且启用, `Github Pages`
    - 在仓库页面点击 `Settings`
    - 左侧倒数第二(左右) 点击`Pages`
-   - 看到一个 `None` 的下拉框, 选中 `main` 分支, (可以是任意分支, 类似 `master` 或者 `gh-pages`)
+   - 看到一个 `None` 的下拉框, 选中 `main` 主分支, (当然可以是任意分支, 类似 `master` 或者 `gh-pages`)
    - 修改后面的 `/(root)` 为 `docs`
    - 点击 `save` 保存即可
    - 等待片刻可以看到自己的在线游戏页面
