@@ -76,7 +76,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ github.event.repository.name }}-WebGL
-          path: docs
+          path: temp
+      - name: 移动所有下载文件
+        run: |
+          mv temp/WebGL docs
       - name: 查看下载后的内容
         run: |
           ls
