@@ -1,0 +1,120 @@
+﻿name: 测试🧪 → 构建🍳 → 发行🍻
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Assets/**"
+      - "Packages/**"
+      - "ProjectSettings/**"
+
+jobs:
+  buildWithLinux:
+    name: 为 ${{ matrix.targetPlatform }} 平台构建 🍳
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          # - Android
+          - WebGL
+    outputs:
+      targetPlatform: ${{ matrix.targetPlatform }}
+    steps:
+      - name: 获取代码存储库
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: 缓存Unity库文件夹
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-build-${{ matrix.targetPlatform }}-
+            Library-build-
+      - name: 构建Unity工程
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          # UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          # UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          # UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+      - name: 上传构建结果
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.inputs.product_short }}-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+      - name: 压缩构建结果
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r build/${{ github.event.inputs.product_short }}-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
+      - name: 上传压缩包到Github发布页
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          asset_name: ${{ github.event.inputs.product_short }}-${{ matrix.targetPlatform }}.zip
+          file: build/${{ github.event.inputs.product_short }}-${{ matrix.targetPlatform }}.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+  
+  releaseToGitHubPages:
+    name: 通过GitHubPages发布WebGL🍻
+    runs-on: ubuntu-latest
+    needs: readyReleaseWebGL
+    steps:
+      - name: 获取代码存储库
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: 下载WebGL构建包
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ github.event.inputs.product_short }}-WebGL
+          path: docs
+      - name: 查看下载后的内容
+        run: |
+          ls
+          tree
+      - name: 部署到GitHubPages
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          file_pattern: docs/**
+          commit_message: 部署到GitHubPages
+  
+  releaseToSite:
+    name: 同时发布到个人站点🍻
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    steps:
+      - name: 获取代码存储库
+        uses: actions/checkout@v2
+        with:
+          repository: danyow/danyow
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN_FULL }}
+          ref: gh-pages
+      - name: 下载WebGL构建包
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ github.event.inputs.product_short }}-WebGL
+      - name: 查看下载前的路径内容
+        run: |
+          ls
+          tree
+      - name: 查看下载后的路径内容
+        run: |
+          ls
+          tree
+      - name: 提交到个人站点
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: gh-pages
+          file_pattern: WebGL/**
+          commit_message: 部署到个人站点
+  
+  
