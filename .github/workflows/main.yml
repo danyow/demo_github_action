@@ -96,6 +96,7 @@ jobs:
           path: tmp
       - name: 移动并覆盖所有下载文件
         run: |
+          mkdir ${{ github.event.repository.name }} -p
           cp -rf tmp/WebGL/*  ${{ github.event.repository.name }}
       - name: 查看下载后的内容
         run: |
