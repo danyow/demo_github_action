@@ -1,4 +1,4 @@
-# 如何用 `Github Action` 来完成自己的 '4399' 在线游戏库!
+# 如何用 `Github Action` 来组建自己的 '4399' 在线游戏库!
 
 [![构建🍳 → 发布🍻](https://github.com/danyow/demo_github_action/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/danyow/demo_github_action/actions/workflows/main.yml)
 
@@ -198,7 +198,7 @@ jobs:
 - `UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}` : 你的 _Unity_ 的密码
 - `UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }} ` : 从 [Unity 订阅页面](https://id.unity.com/en/subscriptions) 获取密钥.
 
-### 进阶内容
+### 进阶内容(Beta)
 
 构建的 `Github Pages` 也仅仅只是仅限于当前仓库的页面, 如果有个人主页的话, 可以一并同步过去岂不美哉
 
@@ -210,7 +210,7 @@ jobs:
 2. 点击右侧有个单独的一栏 `Developer settings`
 3. 继续点击右侧第三个 `Personal access tokens`
 4. `Generate new token`
-5. 按需勾选得到一个 `ghp_` 开头的内容, 复制保存(只会在这里显示一次)
+5. 按需勾选得到一个 `ghp_` 开头的内容, 复制保存(只会在这里显示一次, 可能后续可以用到)
 
 在 `secrets` 内加入新的值. 命名为 `GH_PERSONAL_ACCESS_TOKEN_FULL` (可以为任意值, 但不能以`GITHUB` 开头).
 
