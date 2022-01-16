@@ -49,19 +49,6 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-#      - name: 压缩构建结果
-#        uses: montudor/action-zip@v1
-#        with:
-#          args: zip -qq -r build/${{ github.event.repository.name }}-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
-#      - name: 上传压缩包到Github发布页
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-#          asset_name: ${{ github.event.repository.name }}-${{ matrix.targetPlatform }}.zip
-#          file: build/${{ github.event.repository.name }}-${{ matrix.targetPlatform }}.zip
-#          tag: ${{ github.ref }}
-#          overwrite: true
-#          body: ${{ github.event.release.body }}
   
   releaseToGitHubPages:
     name: 通过GitHubPages发布WebGL🍻
@@ -91,26 +78,32 @@ jobs:
           file_pattern: docs/**
           commit_message: 部署到GitHubPages
   
-#  releaseToSite:
-#    name: 同时发布到个人站点🍻
-#    runs-on: ubuntu-latest
-#    needs: buildWithLinux
-#    steps:
-#      - name: 获取代码存储库
-#        uses: actions/checkout@v2
-#        with:
-#          repository: danyow/danyow
-#          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN_FULL }}
-#          ref: gh-pages
-#      - name: 下载WebGL构建包
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: ${{ github.event.repository.name }}-WebGL
-#      - name: 提交到个人站点
-#        uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          branch: gh-pages
-#          file_pattern: WebGL/**
-#          commit_message: 部署到个人站点
-#  
-  
+  releaseToSite:
+    name: 同时发布到个人站点🍻
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    steps:
+      - name: 获取代码存储库
+        uses: actions/checkout@v2
+        with:
+          repository: danyow/danyow
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN_FULL }}
+          ref: gh-pages
+      - name: 下载WebGL构建包
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ github.event.repository.name }}-WebGL
+          path: tmp
+      - name: 移动并覆盖所有下载文件
+        run: |
+          cp -rf tmp/WebGL/*  ${{ github.event.repository.name }}
+      - name: 查看下载后的内容
+        run: |
+          ls
+          tree
+      - name: 发布到个人站点
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: gh-pages
+          file_pattern: ${{ github.event.repository.name }}/**
+          commit_message: ${{ github.event.repository.name }}发布到个人站点  
