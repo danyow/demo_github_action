@@ -4,7 +4,6 @@
 
 [![WebGL Demo](https://img.shields.io/badge/demo-WebGL-orange.svg?style=flat&logo=google-chrome&logoColor=white&cacheSeconds=2592000)](https://danyow.github.io/demo_github_action/)
 
-
 ## 原理
 
 其实就是用上了 `Github Action` 自动构建和 `Github Pages`
@@ -247,5 +246,5 @@ jobs:
         with:
           branch: gh-pages
           file_pattern: ${{ github.event.repository.name }}/**
-          commit_message: ${{ github.event.repository.name }}发布到个人站点  
+          commit_message: ${{ github.event.repository.name }}发布到个人站点 
 ```
