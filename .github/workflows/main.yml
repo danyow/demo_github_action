@@ -1,5 +1,6 @@
-﻿name: 测试🧪 → 构建🍳 → 发行🍻
+﻿name: 构建🍳 → 发布🍻
 on:
+  workflow_dispatch: { }
   push:
     branches:
       - main
