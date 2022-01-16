@@ -77,9 +77,9 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}-WebGL
           path: temp
-      - name: 移动所有下载文件
+      - name: 移动并覆盖所有下载文件
         run: |
-          mv temp/WebGL/* docs
+          mv -f temp/WebGL/* docs
       - name: 查看下载后的内容
         run: |
           ls
