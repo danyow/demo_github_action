@@ -48,7 +48,7 @@ docs
 4. 推送项目, 并且启用, `Github Pages`
     - 在仓库页面点击 `Settings`
     - 左侧倒数第二点击 `Pages`
-    - 看到一个 `None` 的下拉框, 选中 `main` 主分支, (当然可以是任意分支, 类似 `master` 或者 `gh-pages`)
+    - 看到一个 `None` 的下拉框, 选中 `gh-pages` 主分支, (当然可以是任意分支, 类似 `master` 或者 `main`)
     - 修改后面的 `/(root)` 为 `docs`
     - 点击 `save` 保存即可
     - 等待片刻可以看到自己的在线游戏页面
@@ -132,7 +132,7 @@ jobs:
       - name: 获取代码存储库
         uses: actions/checkout@v2
         with:
-          ref: main
+          ref: gh-pages
       - name: 下载WebGL构建包
         uses: actions/download-artifact@v2
         with:
@@ -148,7 +148,7 @@ jobs:
       - name: 部署到GitHubPages
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          branch: main
+          branch: gh-pages
           file_pattern: docs/**
           commit_message: 部署到GitHubPages
 ```
