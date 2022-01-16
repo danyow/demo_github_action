@@ -66,7 +66,7 @@ jobs:
   releaseToGitHubPages:
     name: 通过GitHubPages发布WebGL🍻
     runs-on: ubuntu-latest
-    needs: readyReleaseWebGL
+    needs: buildWithLinux
     steps:
       - name: 获取代码存储库
         uses: actions/checkout@v2
